@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-4.2.xsd
+			http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+			http://www.springframework.org/schema/tx
+			http://www.springframework.org/schema/tx/spring-tx-4.2.xsd ">
+
+
+    <!--读取db.properties到spring-->
+    <context:property-placeholder location="classpath:db.properties"/>
+    <!--配置c3p0的各个属性-->
+    <bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <!--<constructor-arg name="configName" value="db.properties"/>-->
+    </bean>
+
+    <!--action-->
+    <!--注意：scope属性一定要配置成为多例-->
+    <bean class="cn.gcc.action.UserAction" name="userAction" scope="prototype">
+        <property name="userService" ref="userService"/>
+    </bean>
+
+    <!--service-->
+    <bean class="cn.gcc.service.impl.UserServiceImpl" name="userService"/>
+
+    <!--
+        配置spring容器中的sessionFactory
+        这里是使用spring里面的LocalSessionFactoryBean类
+        这里包含多个LocalSessionFactoryBean，使用的是和hibernate版本相同的那个
+    -->
+    <!--配置方案一：直接使用hibernate的配置文件-->
+    <!--<bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+    </bean>-->
+    <!--这里是方案二：使用spring的配置文件直接配置hibernate-->
+    <bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <!--配置hibernate的基础配置-->
+        <property name="hibernateProperties">
+            <!--
+            <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+            <property name="hibernate.connection.url">jdbc:mysql:///crm_32</property>
+            <property name="hibernate.connection.username">root</property>
+            <property name="hibernate.connection.password">root</property>
+            -->
+            <props>
+                <!--必选-->
+                <!--
+                如果配置了dataSource可以省略这几个步骤
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql:///crm_32</prop>
+                <prop key="hibernate.connection.username">root</prop>
+                <prop key="hibernate.connection.password">root</prop>
+                -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <!--可选-->
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+        <!--
+            配置hibernate的mapping对象配置
+            这里使用的是通过配置文件路径来映射pojo -->
+        <property name="mappingDirectoryLocations" value="classpath:cn/gcc/domain"/>
+        <!--将c3p0的dataSource整合到hibernate中-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--配置aop事务管理器-->
+    <bean name="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <!--<property name="dataSource" ref="dataSource"/>-->
+    </bean>
+
+    <!-- 配置通知 （相当于一个切面）-->
+     <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
+        <tx:attributes>
+            <!--propagation默认是"REQUIRED"-->
+            <tx:method name="save*" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+            <tx:method name="persist*" isolation="REPEATABLE_READ" read-only="false" />
+            <tx:method name="update*" isolation="REPEATABLE_READ" read-only="false" />
+            <tx:method name="modify*" isolation="REPEATABLE_READ" read-only="false" />
+            <tx:method name="delete*" isolation="REPEATABLE_READ" read-only="false" />
+            <tx:method name="remove*" isolation="REPEATABLE_READ" read-only="false" />
+            <tx:method name="get*" isolation="REPEATABLE_READ" read-only="true" />
+            <tx:method name="find*" isolation="REPEATABLE_READ" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置aop 织入-->
+    <aop:config>
+        <!--配置切入点-->
+        <aop:pointcut id="transactionPointCut" expression="execution(* cn.gcc.service.impl.*ServiceImpl.*(..))"/>
+        <!--配置通知-->
+        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointCut"/>
+
+    </aop:config>
+
+    <!--开启注解-->
+    <context:annotation-config/>
+    <!--注解扫描 base-package="cn.gcc"表示的是只扫描该包以及子包的所有类-->
+    <context:component-scan base-package="cn.gcc"/>
+    <!--打开事务的注解开关-->
+    <tx:annotation-driven/>
+
+    <bean name="userDao" class="cn.gcc.dao.impl.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+</beans>

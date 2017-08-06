@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="crm_32@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.1">
+    <root id="1"/>
+    <schema id="2" parent="1" name="crm_32">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="dang"/>
+    <schema id="4" parent="1" name="day23"/>
+    <schema id="5" parent="1" name="db_books"/>
+    <schema id="6" parent="1" name="db_bookshop"/>
+    <schema id="7" parent="1" name="db_consume"/>
+    <schema id="8" parent="1" name="db_employee"/>
+    <schema id="9" parent="1" name="db_movie"/>
+    <schema id="10" parent="1" name="db_mybatis"/>
+    <schema id="11" parent="1" name="db_school"/>
+    <schema id="12" parent="1" name="db_shoemaker"/>
+    <schema id="13" parent="1" name="db_struts2"/>
+    <schema id="14" parent="1" name="db_train"/>
+    <schema id="15" parent="1" name="hibernate_base"/>
+    <schema id="16" parent="1" name="information_schema"/>
+    <schema id="17" parent="1" name="lus_db"/>
+    <schema id="18" parent="1" name="mysql"/>
+    <schema id="19" parent="1" name="singing"/>
+    <schema id="20" parent="1" name="spring_demo_1"/>
+    <table id="21" parent="2" name="cst_customer"/>
+    <table id="22" parent="2" name="cst_linkman"/>
+    <table id="23" parent="2" name="sys_user"/>
+    <column id="24" parent="21" name="cust_id">
+      <Position>1</Position>
+      <DataType>BIGINT(19)|-5</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="25" parent="21" name="cust_name">
+      <Position>2</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="26" parent="21" name="cust_source">
+      <Position>3</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="27" parent="21" name="cust_industry">
+      <Position>4</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="28" parent="21" name="cust_level">
+      <Position>5</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="29" parent="21" name="cust_linkman">
+      <Position>6</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="30" parent="21" name="cust_phone">
+      <Position>7</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="31" parent="21" name="cust_mobile">
+      <Position>8</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <key id="32" parent="21" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>cust_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="33" parent="22" name="lkm_id">
+      <Position>1</Position>
+      <DataType>BIGINT(19)|-5</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="34" parent="22" name="lkm_gender">
+      <Position>2</Position>
+      <DataType>CHAR(1)|1</DataType>
+    </column>
+    <column id="35" parent="22" name="lkm_name">
+      <Position>3</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="36" parent="22" name="lkm_phone">
+      <Position>4</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="37" parent="22" name="lkm_email">
+      <Position>5</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="38" parent="22" name="lkm_qq">
+      <Position>6</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="39" parent="22" name="lkm_mobile">
+      <Position>7</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="40" parent="22" name="lkm_memo">
+      <Position>8</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="41" parent="22" name="lkm_position">
+      <Position>9</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="42" parent="22" name="lkm_cust_id">
+      <Position>10</Position>
+      <DataType>BIGINT(19)|-5</DataType>
+    </column>
+    <key id="43" parent="22" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>lkm_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="44" parent="22" name="FKh9yp1nql5227xxcopuxqx2e7q">
+      <ColNames>lkm_cust_id</ColNames>
+      <RefSchemaName>crm_32</RefSchemaName>
+      <RefTableName>cst_customer</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>cust_id</RefColNames>
+    </foreign-key>
+    <column id="45" parent="23" name="user_id">
+      <Position>1</Position>
+      <DataType>BIGINT(19)|-5</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="46" parent="23" name="user_code">
+      <Position>2</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="47" parent="23" name="user_name">
+      <Position>3</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="48" parent="23" name="user_password">
+      <Position>4</Position>
+      <DataType>VARCHAR(255)|12</DataType>
+    </column>
+    <column id="49" parent="23" name="user_state">
+      <Position>5</Position>
+      <DataType>CHAR(1)|1</DataType>
+    </column>
+    <key id="50" parent="23" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>user_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>
